@@ -1,29 +1,19 @@
-function PlayerCard({ jugador }) {
+function PlayerCard({ jugador, onDelete }) {
   return (
-    <div style={{
-      border: "1px solid #ddd",
-      borderRadius: "12px",
-      padding: "15px",
-      width: "280px",
-      background: "#f9f9f9",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    }}>
-      
-      <img
-        src={jugador.strCutout || jugador.strThumb || "https://via.placeholder.com/200"}
-        alt={jugador.strPlayer}
-        style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "100px" }}
-      />
+    <div style={{ border: "1px solid black", margin: 10, padding: 10 }}>
+      <h3>{jugador.strPlayer || jugador.nombre}</h3>
+      <p>País: {jugador.strNationality || jugador.pais}</p>
+      <p>Posición: {jugador.strPosition || jugador.posicion}</p>
+      <p>Edad: {jugador.dateBorn || jugador.edad}</p>
 
-      <h2 style={{ marginTop: "10px" }}>{jugador.strPlayer}</h2>
-      <p><strong>Nacionalidad:</strong> {jugador.strNationality}</p>
-      <p><strong>Equipo:</strong> {jugador.strTeam || "Desconocido"}</p>
-      <p><strong>Deporte:</strong> {jugador.strSport}</p>
-
+      {onDelete && (
+        <button onClick={() => onDelete(jugador.id)}>
+          Eliminar
+        </button>
+      )}
     </div>
   );
 }
 
 export default PlayerCard;
+

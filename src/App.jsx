@@ -9,39 +9,52 @@ function App() {
   const [jugadoresManual, setJugadoresManual] = useState([]);
   const [busqueda, setBusqueda] = useState("rugby");
 
+  // BUSCAR JUGADORES EN LA API
   useEffect(() => {
-    async function getJugadores() {
-      const data = await buscarJugadores(busqueda);
+    buscarJugadores(busqueda).then((data) => {
       setJugadoresAPI(data);
-    }
-    getJugadores();
+    });
   }, [busqueda]);
 
-  // ✅ agregar jugador manual
+  // AGREGAR JUGADOR MANUAL
   const agregarJugadorManual = (jugador) => {
     setJugadoresManual([...jugadoresManual, jugador]);
   };
 
-  // unir ambos listados
-  const jugadores = [...jugadoresManual, ...jugadoresAPI];
+  // ELIMINAR JUGADOR MANUAL
+  const eliminarJugadorManual = (id) => {
+    const filtrados = jugadoresManual.filter(
+      (jugador) => jugador.id !== id
+    );
+    setJugadoresManual(filtrados);
+  };
 
   return (
-    <div className="container mt-4">
-      <h1>Buscador de Jugadores de Rugby</h1>
+    <div>
+      <h1>Jugadores de Rugby</h1>
+
+      <SearchBar setBusqueda={setBusqueda} />
 
       <AddPlayerForm onAdd={agregarJugadorManual} />
 
-      <SearchBar onSearch={setBusqueda} />
+      <h2>Resultados de la API</h2>
+      {jugadoresAPI.map((jugador) => (
+        <PlayerCard key={jugador.idPlayer} jugador={jugador} />
+      ))}
 
-      <div className="row g-4 mt-3">
-        {jugadores.map(j => (
-          <div className="col-md-4" key={j.idPlayer}>
-            <PlayerCard jugador={j} />
-          </div>
-        ))}
-      </div>
+      <h2>Jugadores agregados manualmente</h2>
+      {jugadoresManual.map((jugador) => (
+        <PlayerCard
+          key={jugador.id}
+          jugador={jugador}
+          onDelete={eliminarJugadorManual}
+        />
+      ))}
     </div>
   );
 }
 
 export default App;
+
+
+
